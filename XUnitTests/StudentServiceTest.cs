@@ -64,17 +64,17 @@ namespace XUnitTests
             repoMock.Verify(r => r.Add(s), Times.Once);
         }
 
-        [Fact]
-        public void AddStudent_StudentIsNull_ExpectArgumentException_Test()
-        {
-            // Arrange
-            Mock<IStudentRepository> repoMock = new Mock<IStudentRepository>();
-            var service = new StudentService(repoMock.Object);
+        //[Fact]
+        //public void AddStudent_StudentIsNull_ExpectArgumentException_Test()
+        //{
+        //    // Arrange
+        //    Mock<IStudentRepository> repoMock = new Mock<IStudentRepository>();
+        //    var service = new StudentService(repoMock.Object);
 
-            // Act + Assert
-            var ex = Assert.Throws<ArgumentException>(() => service.AddStudent(null));
-            Assert.Equal("Student is missing", ex.Message);
-        }
+        //    // Act + Assert
+        //    var ex = Assert.Throws<ArgumentException>(() => service.AddStudent(null));
+        //    Assert.Equal("Student is missing", ex.Message);
+        //}
 
         [Theory]
         [InlineData(0, "Name", "Address", 1234, "City", "Email", "Invalid id")]

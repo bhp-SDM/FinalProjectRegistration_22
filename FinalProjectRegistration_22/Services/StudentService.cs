@@ -14,8 +14,8 @@ namespace FinalProjectRegistration_22.Services
 
         public void AddStudent(Student s)
         {
-            if (s == null) 
-                throw new ArgumentException("Student is missing");
+            //if (s == null) 
+            //    throw new ArgumentException("Student is missing");
             
             ThrowIfInvalidStudent(s);
             studentRepository.Add(s);
