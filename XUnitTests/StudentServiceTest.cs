@@ -113,11 +113,9 @@ namespace XUnitTests
             fakeRepo.Add(s2);   
 
             Mock<IStudentRepository> repoMock = new Mock<IStudentRepository>();
-            repoMock.Setup(r => r.Delete(It.IsAny<Student>())).Callback<Student>(s =>
-            {
-                fakeRepo.Remove(s);
-            });
-
+            repoMock.Setup(r => r.Delete(It.IsAny<Student>())).Callback<Student>(s => fakeRepo.Remove(s));
+            repoMock.Setup(r => r.GetById(It.IsAny<int>())).Returns<int>(id => fakeRepo.FirstOrDefault(s => s.Id == id));
+            
             var service = new StudentService(repoMock.Object);
 
             // Act

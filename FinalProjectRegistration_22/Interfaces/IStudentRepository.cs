@@ -7,7 +7,7 @@ namespace FinalProjectRegistration_22.Interfaces
         void Add(Student s);
         void Update(Student s);
         void Delete(Student s);
-        Student GetById(int id);
+        Student? GetById(int id);
         IEnumerable<Student> GetAll();
     }
 }
