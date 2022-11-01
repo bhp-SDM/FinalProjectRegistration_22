@@ -21,6 +21,33 @@ namespace FinalProjectRegistration_22.Services
             studentRepository.Add(s);
         }
 
+        public void UpdateStudent(Student s)
+        {
+            if (s == null)
+                throw new ArgumentException("Student is missing");
+            
+            ThrowIfInvalidStudent(s);
+
+            if (studentRepository.GetById(s.Id) == null)
+                throw new ArgumentException("Student id does not exist");
+            studentRepository.Update(s);
+        }
+
+        public void RemoveStudent(Student s)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Student> GetAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Student? GetStudentById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         private void ThrowIfInvalidStudent(Student s)
         {
             if (s.Id < 1) throw new ArgumentException("Invalid id");
