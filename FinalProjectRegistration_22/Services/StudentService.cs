@@ -30,5 +30,16 @@ namespace FinalProjectRegistration_22.Services
             if (string.IsNullOrEmpty(s.City)) throw new ArgumentException("Invalid city");
             if (s.Email != null && s.Email.Length == 0) throw new ArgumentException("Invalid email");
         }
+
+        public void RemoveStudent(Student s)
+        {
+            if (s == null)
+                throw new ArgumentException("Student is missing");
+
+            if (studentRepository.GetById(s.Id) == null)
+                throw new ArgumentException("Student does not exist");
+
+            studentRepository.Delete(s);   
+        }
     }
 }

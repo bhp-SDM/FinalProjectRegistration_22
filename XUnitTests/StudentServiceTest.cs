@@ -100,5 +100,74 @@ namespace XUnitTests
             repoMock.Verify(r => r.Add(s), Times.Never);
         }
 
+        #region RemoveStudent
+        [Fact]
+        public void RemoveStudent_ValidStudent_Test()
+        {
+            // Arrange
+            var s1 = new Student(1, "name1", "address1", 1234, "city1", "email1");
+            var s2 = new Student(2, "name2", "address2", 2345, "city2", "email2");
+
+            var fakeRepo = new List<Student>();
+            fakeRepo.Add(s1);
+            fakeRepo.Add(s2);   
+
+            Mock<IStudentRepository> repoMock = new Mock<IStudentRepository>();
+            repoMock.Setup(r => r.Delete(It.IsAny<Student>())).Callback<Student>(s =>
+            {
+                fakeRepo.Remove(s);
+            });
+
+            var service = new StudentService(repoMock.Object);
+
+            // Act
+            service.RemoveStudent(s1);
+
+            // Assert
+            Assert.True(fakeRepo.Count == 1);
+            Assert.Contains(s2, fakeRepo);
+            Assert.DoesNotContain(s1, fakeRepo);
+            repoMock.Verify(r => r.Delete(s1), Times.Once);
+        }
+
+        [Fact]
+        public void RemoveStudent_StudentIsNull_ExpectArgumentException()
+        {
+            // Arrange
+            Mock<IStudentRepository> repoMock = new Mock<IStudentRepository>();
+            var service = new StudentService(repoMock.Object);
+
+            // Act and assert
+            var ex = Assert.Throws<ArgumentException>(() => service.RemoveStudent(null));
+            Assert.Equal("Student is missing", ex.Message);
+            repoMock.Verify(r => r.Delete(null), Times.Never);
+        }
+
+        [Fact]
+        public void UpdateStudent_StudentDoesNotExist_ExpectArgumentException()
+        {
+            // Arrange
+            var s1 = new Student(1, "name1", "address1", 1234, "city1", "email1");
+            var s2 = new Student(2, "name2", "address2", 2345, "city2", "email2");
+
+            var fakeRepo = new List<Student>();
+            fakeRepo.Add(s1);
+
+            Mock<IStudentRepository> repoMock = new Mock<IStudentRepository>();
+            repoMock.Setup(r => r.Delete(It.IsAny<Student>())).Callback<Student>(s =>
+            {
+                fakeRepo.Remove(s);
+            });
+
+            var service = new StudentService(repoMock.Object);
+
+            // Act + assert
+            var ex = Assert.Throws<ArgumentException>(() => service.RemoveStudent(s2));
+            Assert.Equal("Student does not exist", ex.Message);
+            Assert.Contains(s1, fakeRepo);
+            repoMock.Verify(r => r.Delete(s2), Times.Never);
+        }
+
+        #endregion // RemoveStudent
     }
 }
