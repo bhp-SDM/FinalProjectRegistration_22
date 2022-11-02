@@ -32,5 +32,16 @@ namespace FinalProjectRegistration_22.Models
         public Student(int id, string name, string address, int zip, string city)
             : this(id, name, address, zip, city, null) {}
 
+        public override bool Equals(object? obj)
+        {
+            if (obj == null) return false;
+            Student other = (Student)obj;
+            return this.Id == other.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Id.GetHashCode();
+        }
     }
 }
