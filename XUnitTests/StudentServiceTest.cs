@@ -232,7 +232,7 @@ namespace XUnitTests
         }
 
         [Fact]
-        public void UpdateStudent_StudentDoesNotExist_ExpectArgumentException()
+        public void RemoveStudent_StudentDoesNotExist_ExpectArgumentException()
         {
             // Arrange
             var s1 = new Student(1, "name1", "address1", 1234, "city1", "email1");

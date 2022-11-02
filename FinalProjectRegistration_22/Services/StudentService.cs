@@ -33,11 +33,6 @@ namespace FinalProjectRegistration_22.Services
             studentRepository.Update(s);
         }
 
-        public void RemoveStudent(Student s)
-        {
-            throw new NotImplementedException();
-        }
-
         public IEnumerable<Student> GetAll()
         {
             throw new NotImplementedException();
