@@ -18,6 +18,10 @@ namespace FinalProjectRegistration_22.Services
                 throw new ArgumentException("Student is missing");
 
             ThrowIfInvalidStudent(s);
+
+            if (studentRepository.GetById(s.Id) != null)
+                throw new ArgumentException("Student already exist");
+
             studentRepository.Add(s);
         }
 

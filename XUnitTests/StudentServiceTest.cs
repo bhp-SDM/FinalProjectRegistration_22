@@ -68,8 +68,8 @@ namespace XUnitTests
             service.AddStudent(s);
 
             // Assert
-            Assert.True(fakeRepo.Count == 1);
-            Assert.Equal(s, fakeRepo[0]);
+            //Assert.True(fakeRepo.Count == 1);
+            //Assert.Equal(s, fakeRepo[0]);
             studentRepoMock.Verify(r => r.Add(s), Times.Once);
         }
 
@@ -82,6 +82,7 @@ namespace XUnitTests
             // Act + Assert
             var ex = Assert.Throws<ArgumentException>(() => service.AddStudent(null));
             Assert.Equal("Student is missing", ex.Message);
+            studentRepoMock.Verify(r => r.Add(null), Times.Never);   
         }
 
         [Theory]
@@ -104,6 +105,22 @@ namespace XUnitTests
             var ex = Assert.Throws<ArgumentException>(() => service.AddStudent(s));
             Assert.Equal(expectedMessage, ex.Message);
             studentRepoMock.Verify(r => r.Add(s), Times.Never);
+        }
+
+        [Fact]
+        public void AddStudent_DuplicatedId_ExpectArgumentException_Test()
+        {
+            // Arrange
+            var existingStudent = new Student(1, "name", "address", 1234, "city", "email");
+            studentRepoMock.Setup(r => r.GetById(1)).Returns(() => existingStudent);
+
+
+            var service = new StudentService(studentRepoMock.Object);
+
+            // Act + assert
+            var ex = Assert.Throws<ArgumentException>(() => service.AddStudent(existingStudent));
+            Assert.Equal("Student already exist", ex.Message);
+            studentRepoMock.Verify(r => r.Add(existingStudent), Times.Never);   
         }
 
         #endregion // AddStudent
@@ -189,6 +206,7 @@ namespace XUnitTests
         }
 
         #endregion // UpdateStudent
+
         #region RemoveStudent
 
         [Fact]
