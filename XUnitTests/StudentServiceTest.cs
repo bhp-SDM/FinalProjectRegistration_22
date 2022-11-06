@@ -82,7 +82,7 @@ namespace XUnitTests
             // Act + Assert
             var ex = Assert.Throws<ArgumentException>(() => service.AddStudent(null));
             Assert.Equal("Student is missing", ex.Message);
-            studentRepoMock.Verify(r => r.Add(null), Times.Never);   
+            studentRepoMock.Verify(r => r.Add(null), Times.Never);
         }
 
         [Theory]
@@ -112,7 +112,7 @@ namespace XUnitTests
         {
             // Arrange
             var existingStudent = new Student(1, "name", "address", 1234, "city", "email");
-            studentRepoMock.Setup(r => r.GetById(1)).Returns(() => existingStudent);
+            studentRepoMock.Setup(r => r.GetById(1)).Returns(existingStudent);
 
 
             var service = new StudentService(studentRepoMock.Object);
@@ -120,7 +120,7 @@ namespace XUnitTests
             // Act + assert
             var ex = Assert.Throws<ArgumentException>(() => service.AddStudent(existingStudent));
             Assert.Equal("Student already exist", ex.Message);
-            studentRepoMock.Verify(r => r.Add(existingStudent), Times.Never);   
+            studentRepoMock.Verify(r => r.Add(existingStudent), Times.Never);
         }
 
         #endregion // AddStudent
@@ -218,12 +218,12 @@ namespace XUnitTests
 
             var fakeRepo = new List<Student>();
             fakeRepo.Add(s1);
-            fakeRepo.Add(s2);   
+            fakeRepo.Add(s2);
 
             Mock<IStudentRepository> repoMock = new Mock<IStudentRepository>();
             repoMock.Setup(r => r.Delete(It.IsAny<Student>())).Callback<Student>(s => fakeRepo.Remove(s));
             repoMock.Setup(r => r.GetById(It.IsAny<int>())).Returns<int>(id => fakeRepo.FirstOrDefault(s => s.Id == id));
-            
+
             var service = new StudentService(repoMock.Object);
 
             // Act
@@ -275,5 +275,73 @@ namespace XUnitTests
         }
 
         #endregion // RemoveStudent
+
+        #region GetStudentById
+
+        [Fact]
+        public void GetStudentById_ExistingStudent_Test()
+        {
+            // Arrange
+            var id = 1;
+            var existingStudent = new Student(id, "name", "address", 1234, "city", "email");
+
+            var service = new StudentService(studentRepoMock.Object);
+            studentRepoMock.Setup(r => r.GetById(id)).Returns(existingStudent);
+
+            // Act
+            var result = service.GetStudentById(id);
+
+            // Assert
+            Assert.Equal(existingStudent, result);
+            studentRepoMock.Verify(r => r.GetById(id), Times.Once);
+        }
+
+        [Fact]
+        public void GetStudentById_NonExistingStudent_Test()
+        {
+            // Arrange
+            var id = 1;
+            var existingStudent = new Student(id, "name", "address", 1234, "city", "email");
+
+            var service = new StudentService(studentRepoMock.Object);
+            studentRepoMock.Setup(r => r.GetById(id)).Returns(() => null);
+
+            // Act
+            var result = service.GetStudentById(id);
+
+            // Assert
+            Assert.Null(result);
+            studentRepoMock.Verify(r => r.GetById(id), Times.Once);
+        }
+
+        #endregion // GetStudentById
+
+        #region GetAllStudents
+
+        [Fact]
+        public void GetAllStudents_Test()
+        {
+            // Arrange
+            var s1 = new Student(1, "name1", "address1", 1234, "city1", "email1");
+            var s2 = new Student(2, "name2", "address2", 1234, "city2", "email2");
+            
+            var students = new List<Student>()
+            {
+                s1, s2                
+            };
+
+            studentRepoMock.Setup(r => r.GetAll()).Returns(students);
+
+            var service = new StudentService(studentRepoMock.Object);
+
+            // Act
+            var result = service.GetAllStudents().ToList();
+            Assert.True(result.Count == 2);
+            Assert.Contains(s1, result);
+            Assert.Contains(s2, result);
+            studentRepoMock.Verify(r => r.GetAll(), Times.Once);
+        }
+
+        #endregion // GetAllStudents
     }
 }

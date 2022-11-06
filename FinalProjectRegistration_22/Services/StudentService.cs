@@ -37,14 +37,14 @@ namespace FinalProjectRegistration_22.Services
             studentRepository.Update(s);
         }
 
-        public IEnumerable<Student> GetAll()
+        public IEnumerable<Student> GetAllStudents()
         {
-            throw new NotImplementedException();
+            return studentRepository.GetAll();
         }
 
         public Student? GetStudentById(int id)
         {
-            throw new NotImplementedException();
+            return studentRepository.GetById(id);
         }
 
         private void ThrowIfInvalidStudent(Student s)
